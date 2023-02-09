@@ -10,5 +10,6 @@ import { JwtModule } from "@nestjs/jwt";
   imports: [SequelizeModule.forFeature([User, Task]), JwtModule.register({})],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

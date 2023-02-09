@@ -9,7 +9,4 @@ export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
   title: string;
-  @IsNumber()
-  @IsNotEmpty()
-  user_id: number;
 }

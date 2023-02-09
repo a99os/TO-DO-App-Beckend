@@ -12,6 +12,7 @@ import { TaskService } from "./task.service";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
 import { UserGuard } from "../guards/user.guard";
+import { IdGetterUser } from "../decorators/getIdbyAccessToken";
 
 @Controller("task")
 export class TaskController {
@@ -19,31 +20,38 @@ export class TaskController {
 
   @UseGuards(UserGuard)
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  create(
+    @Body() createTaskDto: CreateTaskDto,
+    @IdGetterUser() access_token: string
+  ) {
+    return this.taskService.create(createTaskDto, access_token);
   }
 
   @UseGuards(UserGuard)
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  findAll(@IdGetterUser() access_token: string) {
+    return this.taskService.findAll(access_token);
   }
 
   @UseGuards(UserGuard)
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.taskService.findOne(+id);
+  findOne(@Param("id") id: string, @IdGetterUser() access_token: string) {
+    return this.taskService.findOne(+id, access_token);
   }
 
   @UseGuards(UserGuard)
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
+  update(
+    @Param("id") id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+    @IdGetterUser() access_token: string
+  ) {
+    return this.taskService.update(+id, updateTaskDto, access_token);
   }
 
   @UseGuards(UserGuard)
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.taskService.remove(+id);
+  remove(@Param("id") id: string, @IdGetterUser() access_token: string) {
+    return this.taskService.remove(+id, access_token);
   }
 }
