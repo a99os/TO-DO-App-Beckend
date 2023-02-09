@@ -22,7 +22,6 @@ export const IdGetterUser = createParamDecorator(
           message: "Unauthorized User(user guard)",
         });
       }
-      console.log(token);
       return token;
     } catch (error) {
       console.log(error);

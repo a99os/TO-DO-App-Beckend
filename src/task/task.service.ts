@@ -13,22 +13,23 @@ export class TaskService {
   ) {}
   async create(createTaskDto: CreateTaskDto, access_token: string) {
     const user_id = await this.userService.verifyToken(access_token);
-    
+
     return await this.taskRepository.create({ user_id, ...createTaskDto });
   }
 
   async findAll(access_token: string) {
     const user_id = await this.userService.verifyToken(access_token);
-    
+
     return await this.taskRepository.findAll({
       where: { user_id },
       include: { all: true },
+      order: ["createdAt"],
     });
   }
 
   async findOne(id: number, access_token: string) {
     const user_id = await this.userService.verifyToken(access_token);
-    
+
     const task = await this.taskRepository.findOne({
       where: { id },
       include: { all: true },
@@ -41,13 +42,17 @@ export class TaskService {
 
   async update(id: number, updateTaskDto: UpdateTaskDto, access_token: string) {
     const user_id = await this.userService.verifyToken(access_token);
-    
     const task = await this.taskRepository.findOne({
       where: { id },
       include: { all: true },
     });
     if (task.user_id !== user_id) {
       throw new HttpException("Acces Denied", HttpStatus.FORBIDDEN);
+    }
+    if (updateTaskDto.status) {
+      task.status
+        ? (updateTaskDto.status = false)
+        : (updateTaskDto.status = true);
     }
     await this.taskRepository.update(updateTaskDto, { where: { id } });
     return await this.taskRepository.findOne({
@@ -58,7 +63,7 @@ export class TaskService {
 
   async remove(id: number, access_token: string) {
     const user_id = await this.userService.verifyToken(access_token);
-    
+
     const task = await this.taskRepository.findOne({
       where: { id },
       include: { all: true },
