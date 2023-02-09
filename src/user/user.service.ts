@@ -21,7 +21,7 @@ export class UserService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    const oldUser= = await this.userRepository.findOne({
+    const oldUser = await this.userRepository.findOne({
       where: { username: createUserDto.username },
     });
     if (oldUser) throw new HttpException("Username alreade exist", HttpStatus.NOT_FOUND);
