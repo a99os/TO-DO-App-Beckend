@@ -24,7 +24,7 @@ export class UserService {
     const oldUser= = await this.userRepository.findOne({
       where: { username: createUserDto.username },
     });
-    if (oldUser) throw new HttpException("User Not Found", HttpStatus.NOT_FOUND);
+    if (oldUser) throw new HttpException("Username alreade exist", HttpStatus.NOT_FOUND);
     const user = await this.userRepository.create(createUserDto);
     const tokens = await this.getTokens(user.id);
     user.token = tokens.refresh_token;
