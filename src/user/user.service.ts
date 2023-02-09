@@ -21,6 +21,10 @@ export class UserService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
+    const oldUser= = await this.userRepository.findOne({
+      where: { username: createUserDto.username },
+    });
+    if (!oldUser) throw new HttpException("User Not Found", HttpStatus.NOT_FOUND);
     const user = await this.userRepository.create(createUserDto);
     const tokens = await this.getTokens(user.id);
     user.token = tokens.refresh_token;
